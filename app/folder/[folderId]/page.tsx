@@ -20,7 +20,7 @@ export default async function FolderPage({ params }: FolderPageProps) {
 
   return (
     <>
-      <h1 className="mb-6 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+      <h1 className="mb-6 text-lg font-semibold text-[var(--text)]">
         {folder.name}
       </h1>
       <BookmarkGrid bookmarks={folderBookmarks} />

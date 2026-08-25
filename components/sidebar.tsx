@@ -12,20 +12,20 @@ export default function Sidebar({ folders }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col gap-1 border-r border-zinc-200 bg-white px-3 py-4 dark:border-zinc-800 dark:bg-zinc-950">
+    <aside className="flex w-56 shrink-0 flex-col gap-1 border-r border-[var(--border)] px-3 py-4">
       <Link
         href="/"
-        className={`rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors ${
+        className={`nav-link rounded-md px-3 py-2 text-left text-sm font-medium ${
           pathname === "/"
-            ? "bg-indigo-600 text-white"
-            : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+            ? "bg-[var(--accent)] text-white"
+            : "text-[var(--text)]"
         }`}
       >
         All
       </Link>
 
-      <div className="mt-3 flex flex-col gap-1">
-        <span className="px-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">
+      <div className="mt-4 flex flex-col gap-1">
+        <span className="px-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-sub)]">
           폴더
         </span>
 
@@ -37,14 +37,16 @@ export default function Sidebar({ folders }: SidebarProps) {
             <Link
               key={folder.id}
               href={href}
-              className={`flex items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors ${
+              className={`folder-item flex items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium ${
                 isActive
-                  ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                  : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  ? "bg-[var(--hover-bg)] text-[var(--accent)]"
+                  : "text-[var(--text)]"
               }`}
             >
               <span>{folder.name}</span>
-              <span className="text-xs text-zinc-400">{folder.count}</span>
+              <span className="text-xs text-[var(--text-sub)]">
+                {folder.count}
+              </span>
             </Link>
           );
         })}
