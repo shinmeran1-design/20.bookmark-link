@@ -19,8 +19,8 @@ export default function NewLinkForm({ folders }: NewLinkFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-5">
-      <div className="flex flex-col gap-1.5">
+    <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-6">
+      <div className="flex flex-col gap-2">
         <label
           htmlFor="url"
           className="text-sm font-medium text-[var(--text)]"
@@ -34,11 +34,11 @@ export default function NewLinkForm({ folders }: NewLinkFormProps) {
           placeholder="https://example.com"
           value={url}
           onChange={(event) => setUrl(event.target.value)}
-          className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--placeholder)] outline-none focus:border-[var(--accent)]"
+          className="rounded-[10px] border border-[var(--border)] bg-white px-4 py-3 text-[17px] text-[var(--text)] placeholder-[var(--placeholder)] outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_3px_rgba(0,113,227,0.2)]"
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <label
           htmlFor="folder"
           className="text-sm font-medium text-[var(--text)]"
@@ -49,7 +49,7 @@ export default function NewLinkForm({ folders }: NewLinkFormProps) {
           id="folder"
           value={folderId}
           onChange={(event) => setFolderId(event.target.value)}
-          className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] outline-none focus:border-[var(--accent)]"
+          className="rounded-[10px] border border-[var(--border)] bg-white px-4 py-3 text-[17px] text-[var(--text)] outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_3px_rgba(0,113,227,0.2)]"
         >
           {folders.map((folder) => (
             <option key={folder.id} value={folder.id}>
@@ -61,7 +61,7 @@ export default function NewLinkForm({ folders }: NewLinkFormProps) {
 
       <button
         type="submit"
-        className="btn-primary self-start rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white"
+        className="btn-primary self-start rounded-full bg-[var(--accent)] px-6 py-3 text-[17px] font-medium text-white"
       >
         저장
       </button>

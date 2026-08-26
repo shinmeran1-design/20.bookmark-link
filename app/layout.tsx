@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/header";
 import Sidebar from "@/components/sidebar";
+import FolderProvider from "@/components/folder-provider";
 import { folders } from "@/lib/mock-data";
 import "./globals.css";
 
@@ -13,13 +14,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full bg-[var(--bg)]">
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <div className="flex flex-1">
-            <Sidebar folders={folders} />
-            <main className="flex-1 px-8 py-10">{children}</main>
+        <FolderProvider initialFolders={folders}>
+          <div className="flex min-h-screen flex-col">
+            <Header />
+            <div className="flex flex-1">
+              <Sidebar />
+              <main className="flex-1 px-10 py-14">{children}</main>
+            </div>
           </div>
-        </div>
+        </FolderProvider>
       </body>
     </html>
   );

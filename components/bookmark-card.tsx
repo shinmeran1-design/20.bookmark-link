@@ -12,9 +12,9 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
       href={bookmark.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="card-hover flex flex-col gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4"
+      className="card-hover flex flex-col gap-3 rounded-xl bg-[var(--surface)] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
     >
-      <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[var(--hover-bg)] text-sm font-semibold text-[var(--accent)]">
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--hover-bg)] text-sm font-semibold text-[var(--accent)]">
         {domain.charAt(0).toUpperCase()}
       </div>
 

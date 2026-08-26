@@ -2,20 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Folder } from "@/lib/types";
+import { useFolders } from "@/components/folder-provider";
 
-type SidebarProps = {
-  folders: Folder[];
-};
-
-export default function Sidebar({ folders }: SidebarProps) {
+export default function Sidebar() {
   const pathname = usePathname();
+  const { folders } = useFolders();
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col gap-1 border-r border-[var(--border)] px-3 py-4">
+    <aside className="flex w-56 shrink-0 flex-col gap-1 border-r border-[var(--divider)] px-4 py-6">
       <Link
         href="/"
-        className={`nav-link rounded-md px-3 py-2 text-left text-sm font-medium ${
+        className={`nav-link rounded-full px-4 py-2 text-left text-sm font-medium ${
           pathname === "/"
             ? "bg-[var(--accent)] text-white"
             : "text-[var(--text)]"
@@ -24,11 +21,7 @@ export default function Sidebar({ folders }: SidebarProps) {
         All
       </Link>
 
-      <div className="mt-4 flex flex-col gap-1">
-        <span className="px-3 text-xs font-semibold uppercase tracking-wide text-[var(--text-sub)]">
-          폴더
-        </span>
-
+      <div className="mt-5 flex flex-col gap-1">
         {folders.map((folder) => {
           const href = `/folder/${folder.id}`;
           const isActive = pathname === href;
@@ -37,7 +30,7 @@ export default function Sidebar({ folders }: SidebarProps) {
             <Link
               key={folder.id}
               href={href}
-              className={`folder-item flex items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium ${
+              className={`folder-item flex items-center justify-between rounded-full px-4 py-2 text-left text-sm font-medium ${
                 isActive
                   ? "bg-[var(--hover-bg)] text-[var(--accent)]"
                   : "text-[var(--text)]"
