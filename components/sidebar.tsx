@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useFolders } from "@/components/folder-provider";
 import DeleteFolderButton from "@/components/delete-folder-button";
+import EditFolderButton from "@/components/edit-folder-button";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -40,14 +41,14 @@ export default function Sidebar() {
                 {folder.name}
               </Link>
 
-              <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
-                <span className="text-xs text-[var(--text-sub)] transition-opacity group-hover:opacity-0">
+              <span className="relative flex h-5 w-11 shrink-0 items-center justify-end">
+                <span className="absolute right-0 text-xs text-[var(--text-sub)] transition-opacity group-hover:opacity-0">
                   {folder.count}
                 </span>
-                <DeleteFolderButton
-                  folder={folder}
-                  className="absolute inset-0 h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100"
-                />
+                <span className="absolute right-0 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                  <EditFolderButton folder={folder} className="h-5 w-5" />
+                  <DeleteFolderButton folder={folder} className="h-5 w-5" />
+                </span>
               </span>
             </div>
           );
