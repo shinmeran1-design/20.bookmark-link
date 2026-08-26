@@ -3,9 +3,13 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import type { Bookmark } from "@/lib/types";
 
+type BookmarkUpdate = Pick<Bookmark, "title" | "description" | "folderId">;
+
 type BookmarkContextValue = {
   bookmarks: Bookmark[];
   addBookmark: (bookmark: Omit<Bookmark, "id">) => void;
+  updateBookmark: (id: string, updates: BookmarkUpdate) => void;
+  deleteBookmark: (id: string) => void;
 };
 
 const BookmarkContext = createContext<BookmarkContextValue | null>(null);
@@ -30,8 +34,22 @@ export default function BookmarkProvider({
     setBookmarks((prev) => [newBookmark, ...prev]);
   };
 
+  const updateBookmark = (id: string, updates: BookmarkUpdate) => {
+    setBookmarks((prev) =>
+      prev.map((bookmark) =>
+        bookmark.id === id ? { ...bookmark, ...updates } : bookmark
+      )
+    );
+  };
+
+  const deleteBookmark = (id: string) => {
+    setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
+  };
+
   return (
-    <BookmarkContext.Provider value={{ bookmarks, addBookmark }}>
+    <BookmarkContext.Provider
+      value={{ bookmarks, addBookmark, updateBookmark, deleteBookmark }}
+    >
       {children}
     </BookmarkContext.Provider>
   );

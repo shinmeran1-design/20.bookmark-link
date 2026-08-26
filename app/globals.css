@@ -66,3 +66,13 @@ body {
   background: var(--hover-bg);
   color: var(--accent);
 }
+
+.card-delete-btn:hover {
+  background: #ffffff;
+  color: var(--error);
+}
+
+.card-edit-btn:hover {
+  background: #ffffff;
+  color: var(--accent);
+}
