@@ -6,33 +6,18 @@ import type { Folder } from "@/lib/types";
 
 type EditFolderModalProps = {
   folder: Folder;
-  isOpen: boolean;
   onClose: () => void;
   onSave: (name: string) => void;
 };
 
 export default function EditFolderModal({
   folder,
-  isOpen,
   onClose,
   onSave,
 }: EditFolderModalProps) {
   const [name, setName] = useState(folder.name);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      setName(folder.name);
-    }
-  }, [isOpen, folder.name]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
@@ -41,9 +26,7 @@ export default function EditFolderModal({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen || !mounted) return null;
+  }, [onClose]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -23,11 +23,9 @@ export default function NewFolderButton() {
         <span className="text-base leading-none">+</span>새 폴더
       </button>
 
-      <NewFolderModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onSave={handleSave}
-      />
+      {isOpen && (
+        <NewFolderModal onClose={() => setIsOpen(false)} onSave={handleSave} />
+      )}
     </>
   );
 }

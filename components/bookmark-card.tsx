@@ -12,19 +12,34 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
       href={bookmark.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="card-hover flex flex-col gap-3 rounded-xl bg-[var(--surface)] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+      className="card-hover flex flex-col overflow-hidden rounded-xl bg-[var(--surface)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
     >
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--hover-bg)] text-sm font-semibold text-[var(--accent)]">
-        {domain.charAt(0).toUpperCase()}
-      </div>
+      {bookmark.thumbnail && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={bookmark.thumbnail}
+          alt=""
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          className="h-28 w-full object-cover"
+        />
+      )}
 
-      <p className="line-clamp-1 text-sm font-semibold text-[var(--text)]">
-        {bookmark.title}
-      </p>
-      <p className="line-clamp-1 text-xs text-[var(--text-sub)]">{domain}</p>
-      <p className="line-clamp-1 text-xs text-[var(--text-sub)]">
-        {bookmark.description}
-      </p>
+      <div className="flex flex-col gap-3 p-6">
+        {!bookmark.thumbnail && (
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--hover-bg)] text-sm font-semibold text-[var(--accent)]">
+            {domain.charAt(0).toUpperCase()}
+          </div>
+        )}
+
+        <p className="line-clamp-1 text-sm font-semibold text-[var(--text)]">
+          {bookmark.title}
+        </p>
+        <p className="line-clamp-1 text-xs text-[var(--text-sub)]">{domain}</p>
+        <p className="line-clamp-1 text-xs text-[var(--text-sub)]">
+          {bookmark.description}
+        </p>
+      </div>
     </a>
   );
 }

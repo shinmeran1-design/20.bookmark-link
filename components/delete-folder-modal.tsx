@@ -1,31 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import type { Folder } from "@/lib/types";
 
 type DeleteFolderModalProps = {
   folder: Folder;
-  isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
 };
 
 export default function DeleteFolderModal({
   folder,
-  isOpen,
   onClose,
   onConfirm,
 }: DeleteFolderModalProps) {
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
@@ -34,9 +24,7 @@ export default function DeleteFolderModal({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen || !mounted) return null;
+  }, [onClose]);
 
   return createPortal(
     <div

@@ -52,12 +52,13 @@ export default function DeleteFolderButton({
         </svg>
       </button>
 
-      <DeleteFolderModal
-        folder={folder}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onConfirm={handleConfirm}
-      />
+      {isOpen && (
+        <DeleteFolderModal
+          folder={folder}
+          onClose={() => setIsOpen(false)}
+          onConfirm={handleConfirm}
+        />
+      )}
     </>
   );
 }

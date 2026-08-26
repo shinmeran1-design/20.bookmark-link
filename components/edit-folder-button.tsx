@@ -49,12 +49,13 @@ export default function EditFolderButton({
         </svg>
       </button>
 
-      <EditFolderModal
-        folder={folder}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onSave={handleSave}
-      />
+      {isOpen && (
+        <EditFolderModal
+          folder={folder}
+          onClose={() => setIsOpen(false)}
+          onSave={handleSave}
+        />
+      )}
     </>
   );
 }

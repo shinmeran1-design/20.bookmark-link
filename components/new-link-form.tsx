@@ -2,20 +2,48 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import type { Folder } from "@/lib/types";
+import { useFolders } from "@/components/folder-provider";
+import { useBookmarks } from "@/components/bookmark-provider";
+import type { OpenGraphData } from "@/lib/types";
 
-type NewLinkFormProps = {
-  folders: Folder[];
-};
-
-export default function NewLinkForm({ folders }: NewLinkFormProps) {
+export default function NewLinkForm() {
   const router = useRouter();
+  const { folders } = useFolders();
+  const { addBookmark } = useBookmarks();
   const [url, setUrl] = useState("");
   const [folderId, setFolderId] = useState(folders[0]?.id ?? "");
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    router.push("/");
+    if (!folderId || isSaving) return;
+
+    setIsSaving(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/og?url=${encodeURIComponent(url)}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch link info");
+      }
+
+      const og: OpenGraphData = await response.json();
+
+      addBookmark({
+        title: og.title || url,
+        description: og.description,
+        thumbnail: og.image || undefined,
+        url: og.url || url,
+        folderId,
+      });
+
+      router.push(`/folder/${folderId}`);
+    } catch {
+      setError("링크 정보를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -59,11 +87,14 @@ export default function NewLinkForm({ folders }: NewLinkFormProps) {
         </select>
       </div>
 
+      {error && <p className="text-sm text-[var(--error)]">{error}</p>}
+
       <button
         type="submit"
-        className="btn-primary self-start rounded-full bg-[var(--accent)] px-6 py-3 text-[17px] font-medium text-white"
+        disabled={isSaving}
+        className="btn-primary self-start rounded-full bg-[var(--accent)] px-6 py-3 text-[17px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
       >
-        저장
+        {isSaving ? "저장 중..." : "저장"}
       </button>
     </form>
   );

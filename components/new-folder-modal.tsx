@@ -4,32 +4,17 @@ import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 
 type NewFolderModalProps = {
-  isOpen: boolean;
   onClose: () => void;
   onSave: (name: string) => void;
 };
 
 export default function NewFolderModal({
-  isOpen,
   onClose,
   onSave,
 }: NewFolderModalProps) {
   const [name, setName] = useState("");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      setName("");
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
@@ -38,9 +23,7 @@ export default function NewFolderModal({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen || !mounted) return null;
+  }, [onClose]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
