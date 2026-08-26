@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useFolders } from "@/components/folder-provider";
+import DeleteFolderButton from "@/components/delete-folder-button";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -27,20 +28,28 @@ export default function Sidebar() {
           const isActive = pathname === href;
 
           return (
-            <Link
+            <div
               key={folder.id}
-              href={href}
-              className={`folder-item flex items-center justify-between rounded-full px-4 py-2 text-left text-sm font-medium ${
+              className={`folder-item group flex items-center justify-between rounded-full px-4 py-2 text-sm font-medium ${
                 isActive
                   ? "bg-[var(--hover-bg)] text-[var(--accent)]"
                   : "text-[var(--text)]"
               }`}
             >
-              <span>{folder.name}</span>
-              <span className="text-xs text-[var(--text-sub)]">
-                {folder.count}
+              <Link href={href} className="min-w-0 flex-1 truncate text-left">
+                {folder.name}
+              </Link>
+
+              <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                <span className="text-xs text-[var(--text-sub)] transition-opacity group-hover:opacity-0">
+                  {folder.count}
+                </span>
+                <DeleteFolderButton
+                  folder={folder}
+                  className="absolute inset-0 h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100"
+                />
               </span>
-            </Link>
+            </div>
           );
         })}
       </div>

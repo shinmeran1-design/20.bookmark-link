@@ -52,3 +52,12 @@ body {
 .btn-outline:hover {
   background: var(--hover-bg);
 }
+
+.btn-danger:hover {
+  background: #e0342b;
+}
+
+.btn-icon-danger:hover {
+  background: var(--hover-bg);
+  color: var(--error);
+}
