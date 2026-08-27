@@ -8,8 +8,8 @@ export default function NewFolderButton() {
   const [isOpen, setIsOpen] = useState(false);
   const { addFolder } = useFolders();
 
-  const handleSave = (name: string) => {
-    addFolder(name);
+  const handleSave = async (name: string) => {
+    await addFolder(name);
     setIsOpen(false);
   };
 

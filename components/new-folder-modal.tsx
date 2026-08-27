@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 type NewFolderModalProps = {
   onClose: () => void;
-  onSave: (name: string) => void;
+  onSave: (name: string) => void | Promise<void>;
 };
 
 export default function NewFolderModal({
@@ -13,6 +13,7 @@ export default function NewFolderModal({
   onSave,
 }: NewFolderModalProps) {
   const [name, setName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -25,11 +26,18 @@ export default function NewFolderModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSaving) return;
     const trimmed = name.trim();
     if (!trimmed) return;
-    onSave(trimmed);
+
+    setIsSaving(true);
+    try {
+      await onSave(trimmed);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return createPortal(
@@ -62,15 +70,17 @@ export default function NewFolderModal({
             <button
               type="button"
               onClick={onClose}
-              className="btn-outline rounded-full border border-[var(--border)] px-5 py-2 text-sm font-medium text-[var(--text)]"
+              disabled={isSaving}
+              className="btn-outline rounded-full border border-[var(--border)] px-5 py-2 text-sm font-medium text-[var(--text)] disabled:opacity-50"
             >
               취소
             </button>
             <button
               type="submit"
-              className="btn-primary rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-medium text-white"
+              disabled={isSaving}
+              className="btn-primary rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-medium text-white disabled:opacity-50"
             >
-              저장
+              {isSaving ? "저장 중..." : "저장"}
             </button>
           </div>
         </form>

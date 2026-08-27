@@ -1,11 +1,18 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import { createClient } from "@/utils/supabase/client";
 import type { Folder } from "@/lib/types";
 
 type FolderContextValue = {
   folders: Folder[];
-  addFolder: (name: string) => void;
+  addFolder: (name: string) => Promise<void>;
   renameFolder: (id: string, name: string) => void;
   deleteFolder: (id: string) => void;
 };
@@ -22,14 +29,51 @@ export default function FolderProvider({
   children,
 }: FolderProviderProps) {
   const [folders, setFolders] = useState<Folder[]>(initialFolders);
+  const [supabase] = useState(() => createClient());
 
-  const addFolder = (name: string) => {
+  useEffect(() => {
+    let active = true;
+
+    const loadFolders = async () => {
+      const { data, error } = await supabase
+        .from("folders")
+        .select("id, name")
+        .order("created_at", { ascending: true });
+
+      if (!active || error || !data) return;
+
+      setFolders(
+        data.map((row) => ({
+          id: String(row.id),
+          name: row.name,
+          count: 0,
+        }))
+      );
+    };
+
+    loadFolders();
+
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const addFolder = async (name: string) => {
     const trimmed = name.trim();
     if (!trimmed) return;
 
+    const { data, error } = await supabase
+      .from("folders")
+      .insert({ name: trimmed })
+      .select("id, name")
+      .single();
+
+    if (error || !data) return;
+
     const newFolder: Folder = {
-      id: `folder-${Date.now()}`,
-      name: trimmed,
+      id: String(data.id),
+      name: data.name,
       count: 0,
     };
 
