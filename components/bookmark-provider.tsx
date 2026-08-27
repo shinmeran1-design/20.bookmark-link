@@ -16,7 +16,7 @@ type BookmarkContextValue = {
   bookmarks: Bookmark[];
   addBookmark: (bookmark: Omit<Bookmark, "id">) => Promise<void>;
   updateBookmark: (id: string, updates: BookmarkUpdate) => Promise<void>;
-  deleteBookmark: (id: string) => void;
+  deleteBookmark: (id: string) => Promise<void>;
 };
 
 const BookmarkContext = createContext<BookmarkContextValue | null>(null);
@@ -110,7 +110,14 @@ export default function BookmarkProvider({
     );
   };
 
-  const deleteBookmark = (id: string) => {
+  const deleteBookmark = async (id: string) => {
+    const { error } = await supabase
+      .from("links")
+      .delete()
+      .eq("id", Number(id));
+
+    if (error) return;
+
     setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
   };
 

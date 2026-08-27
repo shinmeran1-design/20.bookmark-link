@@ -17,8 +17,8 @@ export default function DeleteBookmarkButton({
   const [isOpen, setIsOpen] = useState(false);
   const { deleteBookmark } = useBookmarks();
 
-  const handleConfirm = () => {
-    deleteBookmark(bookmark.id);
+  const handleConfirm = async () => {
+    await deleteBookmark(bookmark.id);
     setIsOpen(false);
   };
 
