@@ -13,7 +13,7 @@ import type { Folder } from "@/lib/types";
 type FolderContextValue = {
   folders: Folder[];
   addFolder: (name: string) => Promise<void>;
-  renameFolder: (id: string, name: string) => void;
+  renameFolder: (id: string, name: string) => Promise<void>;
   deleteFolder: (id: string) => void;
 };
 
@@ -80,9 +80,16 @@ export default function FolderProvider({
     setFolders((prev) => [...prev, newFolder]);
   };
 
-  const renameFolder = (id: string, name: string) => {
+  const renameFolder = async (id: string, name: string) => {
     const trimmed = name.trim();
     if (!trimmed) return;
+
+    const { error } = await supabase
+      .from("folders")
+      .update({ name: trimmed })
+      .eq("id", Number(id));
+
+    if (error) return;
 
     setFolders((prev) =>
       prev.map((folder) =>

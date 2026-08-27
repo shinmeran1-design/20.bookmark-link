@@ -17,8 +17,8 @@ export default function EditFolderButton({
   const [isOpen, setIsOpen] = useState(false);
   const { renameFolder } = useFolders();
 
-  const handleSave = (name: string) => {
-    renameFolder(folder.id, name);
+  const handleSave = async (name: string) => {
+    await renameFolder(folder.id, name);
     setIsOpen(false);
   };
 
