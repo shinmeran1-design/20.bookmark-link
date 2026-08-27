@@ -17,8 +17,8 @@ export default function DeleteFolderButton({
   const [isOpen, setIsOpen] = useState(false);
   const { deleteFolder } = useFolders();
 
-  const handleConfirm = () => {
-    deleteFolder(folder.id);
+  const handleConfirm = async () => {
+    await deleteFolder(folder.id);
     setIsOpen(false);
   };
 
