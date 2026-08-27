@@ -11,13 +11,16 @@ export default function NewLinkForm() {
   const { folders } = useFolders();
   const { addBookmark } = useBookmarks();
   const [url, setUrl] = useState("");
-  const [folderId, setFolderId] = useState(folders[0]?.id ?? "");
+  const [folderId, setFolderId] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
+  // folders are loaded async; fall back to the first folder until the user picks one
+  const selectedFolderId = folderId || folders[0]?.id || "";
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!folderId || isSaving) return;
+    if (!selectedFolderId || isSaving) return;
 
     setIsSaving(true);
     setError("");
@@ -31,15 +34,15 @@ export default function NewLinkForm() {
 
       const og: OpenGraphData = await response.json();
 
-      addBookmark({
+      await addBookmark({
         title: og.title || url,
         description: og.description,
         thumbnail: og.image || undefined,
         url: og.url || url,
-        folderId,
+        folderId: selectedFolderId,
       });
 
-      router.push(`/folder/${folderId}`);
+      router.push(`/folder/${selectedFolderId}`);
     } catch {
       setError("링크 정보를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.");
       setIsSaving(false);
@@ -75,7 +78,7 @@ export default function NewLinkForm() {
         </label>
         <select
           id="folder"
-          value={folderId}
+          value={selectedFolderId}
           onChange={(event) => setFolderId(event.target.value)}
           className="rounded-[10px] border border-[var(--border)] bg-white px-4 py-3 text-[17px] text-[var(--text)] outline-none focus:border-[var(--accent)] focus:shadow-[0_0_0_3px_rgba(0,113,227,0.2)]"
         >
