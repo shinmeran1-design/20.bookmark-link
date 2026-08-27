@@ -23,8 +23,8 @@ export default function EditBookmarkButton({
   const [isOpen, setIsOpen] = useState(false);
   const { updateBookmark } = useBookmarks();
 
-  const handleSave = (updates: BookmarkUpdate) => {
-    updateBookmark(bookmark.id, updates);
+  const handleSave = async (updates: BookmarkUpdate) => {
+    await updateBookmark(bookmark.id, updates);
     setIsOpen(false);
   };
 

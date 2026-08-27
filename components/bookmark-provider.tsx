@@ -15,7 +15,7 @@ type BookmarkUpdate = Pick<Bookmark, "title" | "description" | "folderId">;
 type BookmarkContextValue = {
   bookmarks: Bookmark[];
   addBookmark: (bookmark: Omit<Bookmark, "id">) => Promise<void>;
-  updateBookmark: (id: string, updates: BookmarkUpdate) => void;
+  updateBookmark: (id: string, updates: BookmarkUpdate) => Promise<void>;
   deleteBookmark: (id: string) => void;
 };
 
@@ -91,7 +91,18 @@ export default function BookmarkProvider({
     setBookmarks((prev) => [rowToBookmark(data as LinkRow), ...prev]);
   };
 
-  const updateBookmark = (id: string, updates: BookmarkUpdate) => {
+  const updateBookmark = async (id: string, updates: BookmarkUpdate) => {
+    const { error } = await supabase
+      .from("links")
+      .update({
+        title: updates.title || null,
+        description: updates.description || null,
+        folder_id: updates.folderId ? Number(updates.folderId) : null,
+      })
+      .eq("id", Number(id));
+
+    if (error) return;
+
     setBookmarks((prev) =>
       prev.map((bookmark) =>
         bookmark.id === id ? { ...bookmark, ...updates } : bookmark
