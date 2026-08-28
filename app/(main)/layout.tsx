@@ -3,7 +3,7 @@ import Header from "@/components/header";
 import Sidebar from "@/components/sidebar";
 import FolderProvider from "@/components/folder-provider";
 import BookmarkProvider from "@/components/bookmark-provider";
-import "./globals.css";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Bookmark Link",
