@@ -31,9 +31,15 @@ export const updateSession = async (request: NextRequest) => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 로그인하지 않은 사용자는 로그인/회원가입 페이지 외에는 접근할 수 없다
+  // 로그인하지 않은 사용자는 인증 관련 페이지 외에는 접근할 수 없다
   const { pathname } = request.nextUrl;
-  const isAuthRoute = pathname === "/login" || pathname === "/signup";
+  const authRoutes = [
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+  ];
+  const isAuthRoute = authRoutes.includes(pathname);
 
   if (!user && !isAuthRoute) {
     const redirectUrl = request.nextUrl.clone();
