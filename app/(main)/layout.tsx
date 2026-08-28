@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Header from "@/components/header";
 import Sidebar from "@/components/sidebar";
 import FolderProvider from "@/components/folder-provider";
 import BookmarkProvider from "@/components/bookmark-provider";
+import { createClient } from "@/utils/supabase/server";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -10,7 +13,17 @@ export const metadata: Metadata = {
   description: "링크를 폴더별로 모아 관리하는 북마크 서비스",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // 인덱스, 폴더별, 새 링크 페이지는 로그인한 사용자만 접근 가능
+  const supabase = createClient(await cookies());
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full bg-[var(--bg)]">

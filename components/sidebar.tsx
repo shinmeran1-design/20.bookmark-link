@@ -6,6 +6,7 @@ import { useFolders } from "@/components/folder-provider";
 import { useBookmarks } from "@/components/bookmark-provider";
 import DeleteFolderButton from "@/components/delete-folder-button";
 import EditFolderButton from "@/components/edit-folder-button";
+import LogoutButton from "@/components/logout-button";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -59,6 +60,8 @@ export default function Sidebar() {
           );
         })}
       </div>
+
+      <LogoutButton />
     </aside>
   );
 }

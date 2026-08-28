@@ -27,7 +27,19 @@ export const updateSession = async (request: NextRequest) => {
   // IMPORTANT: touch the session so expired access tokens get refreshed and the
   // new cookies are written onto `supabaseResponse`. Do not run any code between
   // creating the client and this call.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // 로그인하지 않은 사용자는 로그인/회원가입 페이지 외에는 접근할 수 없다
+  const { pathname } = request.nextUrl;
+  const isAuthRoute = pathname === "/login" || pathname === "/signup";
+
+  if (!user && !isAuthRoute) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/login";
+    return NextResponse.redirect(redirectUrl);
+  }
 
   return supabaseResponse;
 };
