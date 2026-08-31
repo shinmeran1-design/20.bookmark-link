@@ -33,11 +33,20 @@ export default function FolderProvider({
 
   useEffect(() => {
     let active = true;
+    let currentUserId: string | null = null;
+    let initialized = false;
 
-    const loadFolders = async () => {
+    const loadFolders = async (userId: string | null) => {
+      // 로그인한 사용자가 없으면 목록을 비운다
+      if (!userId) {
+        if (active) setFolders([]);
+        return;
+      }
+
       const { data, error } = await supabase
         .from("folders")
         .select("id, name")
+        .eq("user_id", userId)
         .order("created_at", { ascending: true });
 
       if (!active || error || !data) return;
@@ -51,10 +60,21 @@ export default function FolderProvider({
       );
     };
 
-    loadFolders();
+    // 최초 세션(INITIAL_SESSION)과 이후 계정 변경(로그인/로그아웃/계정 전환)을 모두 처리한다
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const nextUserId = session?.user?.id ?? null;
+      // 같은 사용자면(토큰 갱신 등) 다시 불러오지 않는다
+      if (initialized && nextUserId === currentUserId) return;
+      initialized = true;
+      currentUserId = nextUserId;
+      loadFolders(nextUserId);
+    });
 
     return () => {
       active = false;
+      subscription.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
