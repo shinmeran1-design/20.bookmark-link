@@ -61,7 +61,15 @@ export default function Sidebar() {
         })}
       </div>
 
-      <LogoutButton />
+      <div className="mt-auto flex flex-col gap-1">
+        <LogoutButton />
+        <Link
+          href="/privacy"
+          className="nav-link rounded-full px-4 py-2 text-left text-xs text-[var(--text-sub)]"
+        >
+          개인정보 처리방침
+        </Link>
+      </div>
     </aside>
   );
 }

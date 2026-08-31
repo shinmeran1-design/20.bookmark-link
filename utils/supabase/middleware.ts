@@ -31,18 +31,19 @@ export const updateSession = async (request: NextRequest) => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 로그인하지 않은 사용자는 인증 관련 페이지 외에는 접근할 수 없다
+  // 로그인하지 않은 사용자도 접근 가능한 경로
   const { pathname } = request.nextUrl;
-  const authRoutes = [
+  const publicRoutes = [
     "/login",
     "/signup",
     "/forgot-password",
     "/reset-password",
+    "/privacy",
   ];
-  const isAuthRoute =
-    authRoutes.includes(pathname) || pathname.startsWith("/auth/");
+  const isPublicRoute =
+    publicRoutes.includes(pathname) || pathname.startsWith("/auth/");
 
-  if (!user && !isAuthRoute) {
+  if (!user && !isPublicRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     return NextResponse.redirect(redirectUrl);

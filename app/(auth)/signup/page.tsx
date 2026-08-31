@@ -154,6 +154,17 @@ export default function SignupPage() {
         </button>
       </form>
 
+      <p className="mt-4 text-center text-xs text-[var(--text-sub)]">
+        가입을 진행하면{" "}
+        <Link
+          href="/privacy"
+          className="underline hover:text-[var(--text)]"
+        >
+          개인정보 처리방침
+        </Link>
+        에 동의하는 것으로 간주됩니다.
+      </p>
+
       <p className="mt-6 text-center text-sm text-[var(--text-sub)]">
         이미 계정이 있으신가요?{" "}
         <Link
