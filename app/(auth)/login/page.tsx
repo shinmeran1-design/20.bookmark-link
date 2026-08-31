@@ -38,6 +38,31 @@ export default function LoginPage() {
     return () => clearTimeout(timer);
   }, [toast]);
 
+  // 소셜 로그인 콜백에서 실패로 되돌아온 경우(?error=oauth) 안내 후 쿼리 정리
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") !== "oauth") return;
+    window.history.replaceState(null, "", "/login");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- URL 상태를 토스트로 옮기는 일회성 동기화
+    setToast("카카오 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+  }, []);
+
+  const handleKakaoLogin = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "kakao",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+
+    if (error) {
+      setToast("카카오 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      setIsSubmitting(false);
+    }
+    // 성공 시 카카오 인증 페이지로 이동하므로 별도 처리 불필요
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!canSubmit) return;
@@ -115,6 +140,20 @@ export default function LoginPage() {
           {isSubmitting ? "로그인 중..." : "로그인"}
         </button>
       </form>
+
+      <button
+        type="button"
+        onClick={handleKakaoLogin}
+        disabled={isSubmitting}
+        className="mt-3 overflow-hidden rounded-[12px] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- 카카오 제공 버튼 에셋을 그대로 사용 */}
+        <img
+          src="/kakao_login_large_wide.png"
+          alt="카카오 로그인"
+          className="block w-full"
+        />
+      </button>
 
       <p className="mt-6 text-center text-sm">
         <Link

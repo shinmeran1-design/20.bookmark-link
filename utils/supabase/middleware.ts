@@ -39,7 +39,8 @@ export const updateSession = async (request: NextRequest) => {
     "/forgot-password",
     "/reset-password",
   ];
-  const isAuthRoute = authRoutes.includes(pathname);
+  const isAuthRoute =
+    authRoutes.includes(pathname) || pathname.startsWith("/auth/");
 
   if (!user && !isAuthRoute) {
     const redirectUrl = request.nextUrl.clone();
