@@ -11,8 +11,8 @@ export const SITE_URL =
 
 const OG_IMAGE = {
   url: "/thumbnail.png",
-  width: 2400,
-  height: 1260,
+  width: 240,
+  height: 126,
   alt: `${SITE_NAME} 미리보기`,
 };
 
