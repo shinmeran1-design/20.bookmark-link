@@ -5,9 +5,13 @@ export const SITE_TITLE = "Bookmark Link · 링크를 폴더별로 모아 관리
 export const SITE_DESCRIPTION = "링크를 폴더별로 모아 관리하는 북마크 서비스";
 
 // 절대 URL이 필요한 메타 필드(og:image 등)의 기준 주소.
-// 배포 환경에서는 NEXT_PUBLIC_SITE_URL 을 설정한다.
+// 우선순위: 직접 지정한 NEXT_PUBLIC_SITE_URL → Vercel 프로덕션 도메인 → 로컬.
+// (og:image 가 http://localhost:3000/... 로 나가면 크롤러가 썸네일을 못 가져온다)
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
 
 const OG_IMAGE = {
   url: "/thumbnail.png",
